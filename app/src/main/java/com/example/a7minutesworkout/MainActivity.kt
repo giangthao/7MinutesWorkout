@@ -12,10 +12,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
+        setContentView(binding?.root)
 
-        val flStartButton :FrameLayout = findViewById(R.id.flStart)
-        flStartButton.setOnClickListener {
+       // val flStartButton :FrameLayout = findViewById(R.id.flStart)
+        binding?.flStart?.setOnClickListener {
             Toast.makeText(
                 this,
                 "Here we are click",
@@ -23,5 +23,10 @@ class MainActivity : AppCompatActivity() {
             ).show()
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 }
