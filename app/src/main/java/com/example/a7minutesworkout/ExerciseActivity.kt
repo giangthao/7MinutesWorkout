@@ -1,5 +1,7 @@
 package com.example.a7minutesworkout
 
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -25,7 +27,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var exerciseList: ArrayList<ExerciseModel>? = null // We will initialize the list later.
     private var currentExercisePosition = -1 // Current Position of Exercise
-
+    // START
+    private var player: MediaPlayer? = null
     private var tts: TextToSpeech? = null
 
 
@@ -51,6 +54,23 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         setupRestView()
     }
     private fun setupRestView(){
+        // TODO (Step 3 - Playing a notification sound when the exercise is about to start when you are in the rest state
+        //  the sound file is added in the raw folder as resource.)
+        // START
+        /**
+         * Here the sound file is added in to "raw" folder in resources.
+         * And played using MediaPlayer. MediaPlayer class can be used to control playback
+         * of audio/video files and streams.
+         */
+        try {
+            val soundURI =
+                Uri.parse("android.resource://eu.tutorials.a7_minutesworkoutapp/" + R.raw.press_start)
+            player = MediaPlayer.create(applicationContext, soundURI)
+            player?.isLooping = false // Sets the player to be looping or non-looping.
+            player?.start() // Starts Playback.
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         binding?.flRestView?.visibility = View.VISIBLE
         binding?.tvTitle?.visibility = View.VISIBLE
         binding?.tvExerciseName?.visibility = View.INVISIBLE
@@ -140,6 +160,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if(tts !=null){
             tts!!.stop()
             tts!!.shutdown()
+        }
+        if(player !=null){
+            player!!.stop()
         }
         binding = null
     }
