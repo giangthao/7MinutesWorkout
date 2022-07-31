@@ -10,7 +10,6 @@ class ExerciseStatusAdapter(val item: ArrayList<ExerciseModel>) :
     inner class MainViewHolder(binding: ItemExerciseStatusBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val tvItem = binding.tvItem
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {

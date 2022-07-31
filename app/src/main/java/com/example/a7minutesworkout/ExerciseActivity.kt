@@ -9,6 +9,7 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a7minutesworkout.databinding.ActivityExerciseBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -31,7 +32,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var player: MediaPlayer? = null
     private var tts: TextToSpeech? = null
 
-
+    // Recycle view
+     var adapter = ExerciseStatusAdapter(Constants.defaultExerciseList())
+    var exerciseAdapter : ExerciseStatusAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +55,16 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         //binding?.flRestView?.visibility = View.GONE
         setupRestView()
+        // Recycle View
+       /* binding?.rvExerciseStatus?.adapter = adapter
+        binding?.rvExerciseStatus?.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)*/
+        setupExerciseStatusRecycleView()
+    }
+    private fun setupExerciseStatusRecycleView(){
+
+        exerciseAdapter = ExerciseStatusAdapter(exerciseList!!)
+        binding?.rvExerciseStatus?.adapter = exerciseAdapter
+        binding?.rvExerciseStatus?.layoutManager =  LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
     }
     private fun setupRestView(){
         // TODO (Step 3 - Playing a notification sound when the exercise is about to start when you are in the rest state
