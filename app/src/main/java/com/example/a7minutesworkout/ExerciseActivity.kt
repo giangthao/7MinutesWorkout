@@ -98,6 +98,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         setRestProgressBar()
     }
+    // Setting up the Exercise View with a 30 seconds timer
+    // START
+    /**
+     * Function is used to set the progress of the timer using the progress for Exercise View.
+     */
     private fun setupExerciseView(){
         binding?.flRestView?.visibility = View.INVISIBLE
         binding?.tvTitle?.visibility = View.INVISIBLE
@@ -115,25 +120,42 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding?.tvExerciseName?.text = exerciseList!![currentExercisePosition].getName()
         setExerciseProgressBar()
     }
+    // Setting up the 10 seconds timer for rest view and updating it continuously.
+    //START
+    /**
+     * Function is used to set the progress of timer using the progress
+     */
     private fun setRestProgressBar() {
-        binding?.progressBar?.progress = restProgress
-
+        binding?.progressBar?.progress = restProgress // Sets the current progress to the specified value.
+        /**
+         * @param millisInFuture The number of millis in the future from the call
+         *   to {#start()} until the countdown is done and {#onFinish()}
+         *   is called.
+         * @param countDownInterval The interval along the way to receive
+         *   {#onTick(long)} callbacks.
+         */
+        // Here we have started a timer of 10 seconds so the 10000 is milliseconds is 10 seconds and the countdown interval is 1 second so it 1000.
         restTimer = object : CountDownTimer(10000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                restProgress++
-                binding?.progressBar?.progress = 10 - restProgress
-                binding?.tvTimer?.text = (10 - restProgress).toString()
+                restProgress++ // It is increased by 1
+                binding?.progressBar?.progress = 10 - restProgress // Indicates progress bar progress
+                binding?.tvTimer?.text=
+                    (10 - restProgress).toString()// Current progress is set to text view in terms of seconds.
             }
 
             override fun onFinish() {
+                // When the 10 seconds will complete this will be executed.
                 currentExercisePosition++
-                exerciseList!![currentExercisePosition].setIsSelected(true)
-                exerciseAdapter!!.notifyDataSetChanged()
+                // TODO(Step 1 : When we are getting an updated position of exercise set that item in the list as selected and notify the adapter class.)
+                // START
+                exerciseList!![currentExercisePosition].setIsSelected(true) // Current Item is selected
+                exerciseAdapter!!.notifyDataSetChanged() // Notified the current item to adapter class to reflect it into UI.
                 setupExerciseView()
             }
 
         }.start()
     }
+
     private fun setExerciseProgressBar() {
         binding?.progressBarExercise?.progress = exerciseProgress
 
@@ -145,9 +167,14 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             override fun onFinish() {
-                exerciseList!![currentExercisePosition].setIsSelected(false)
-                exerciseList!![currentExercisePosition].setIsCompleted(true)
+                // TODO(Step 2 : We have changed the status of the selected item and updated the status of that, so that the position is set as completed in the exercise list.)
+                // START
+                exerciseList!![currentExercisePosition].setIsSelected(false) //  exercise is completed so selection is set to false
+                exerciseList!![currentExercisePosition].setIsCompleted(true)// updating in the list that this exercise is completed
                 exerciseAdapter!!.notifyDataSetChanged()
+                // END
+                // Updating the view after completing the 30 seconds exercise
+                // START
                 if(currentExercisePosition < exerciseList?.size!! -1 ){
                     setupRestView()
                 } else {
@@ -163,7 +190,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         }.start()
     }
-
+// Destroying the timer when closing the activity or app
+    //START
+    /**
+     * Here in the Destroy function we will reset the rest timer if it is running.
+     */
     override fun onDestroy() {
         super.onDestroy()
         if(restTimer !=null){
@@ -174,6 +205,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             exerciseTimer?.cancel()
             exerciseProgress =0
         }
+        // Shutting down the Text to Speech feature when activity is destroyed
+        // START
         if(tts !=null){
             tts!!.stop()
             tts!!.shutdown()

@@ -34,14 +34,14 @@ class ExerciseStatusAdapter(val item: ArrayList<ExerciseModel>) :
             exercise.getIsCompleted() -> {
                 holder.tvItem.background =
                     ContextCompat.getDrawable(holder.itemView.context,
-                        R.drawable.item_cirular_color_gray_background
+                        R.drawable.item_circular_color_accent_background
                     )
                 holder.tvItem.setTextColor(Color.parseColor("#212121"))
             }
             else -> {
                 holder.tvItem.background =
                     ContextCompat.getDrawable(holder.itemView.context,
-                        R.drawable.item_circular_color_accent_background
+                        R.drawable.item_cirular_color_gray_background
                     )
                 holder.tvItem.setTextColor(Color.parseColor("#212121"))
             }
