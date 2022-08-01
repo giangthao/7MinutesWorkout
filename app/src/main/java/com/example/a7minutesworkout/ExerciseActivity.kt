@@ -1,5 +1,6 @@
 package com.example.a7minutesworkout
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -18,23 +19,27 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     //Todo 1 Create 1 binding variable
     private var binding: ActivityExerciseBinding? = null
+
     // - Adding a variables for the 10 seconds REST timer
     //START
-    private var restTimer: CountDownTimer? =null
+    private var restTimer: CountDownTimer? = null
     private var restProgress = 0
-
-    private var exerciseTimer: CountDownTimer? =null // Variable for Exercise Timer and later on we will initialize it.
-    private var exerciseProgress = 0 // Variable for the exercise timer progress. As initial value the exercise progress is set to 0.
-
+    private var restTimerDuration: Long = 1
+    private var exerciseTimer: CountDownTimer? =
+        null // Variable for Exercise Timer and later on we will initialize it.
+    private var exerciseProgress =
+        0 // Variable for the exercise timer progress. As initial value the exercise progress is set to 0.
+    private var exerciseTimerDuration: Long = 1
     private var exerciseList: ArrayList<ExerciseModel>? = null // We will initialize the list later.
     private var currentExercisePosition = -1 // Current Position of Exercise
+
     // START
     private var player: MediaPlayer? = null
     private var tts: TextToSpeech? = null
 
     // Recycle view
-     var adapter = ExerciseStatusAdapter(Constants.defaultExerciseList())
-    var exerciseAdapter : ExerciseStatusAdapter? = null
+    var adapter = ExerciseStatusAdapter(Constants.defaultExerciseList())
+    var exerciseAdapter: ExerciseStatusAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,24 +54,27 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         exerciseList = Constants.defaultExerciseList()
 
-        tts = TextToSpeech(this,this)
+        tts = TextToSpeech(this, this)
         binding?.toolbarExcise?.setNavigationOnClickListener {
             onBackPressed()
         }
         //binding?.flRestView?.visibility = View.GONE
         setupRestView()
         // Recycle View
-       /* binding?.rvExerciseStatus?.adapter = adapter
-        binding?.rvExerciseStatus?.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)*/
+        /* binding?.rvExerciseStatus?.adapter = adapter
+         binding?.rvExerciseStatus?.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)*/
         setupExerciseStatusRecycleView()
     }
-    private fun setupExerciseStatusRecycleView(){
+
+    private fun setupExerciseStatusRecycleView() {
 
         exerciseAdapter = ExerciseStatusAdapter(exerciseList!!)
         binding?.rvExerciseStatus?.adapter = exerciseAdapter
-        binding?.rvExerciseStatus?.layoutManager =  LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        binding?.rvExerciseStatus?.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
-    private fun setupRestView(){
+
+    private fun setupRestView() {
         // TODO (Step 3 - Playing a notification sound when the exercise is about to start when you are in the rest state
         //  the sound file is added in the raw folder as resource.)
         // START
@@ -91,10 +99,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding?.ivImage?.visibility = View.INVISIBLE
         binding?.tvUpcomingLabel?.visibility = View.VISIBLE
         binding?.tvExerciseName?.visibility = View.VISIBLE
-        binding?.tvUpcomingExerciseName?.text = exerciseList!![currentExercisePosition + 1].getName()
-        if(restTimer !=null){
+        binding?.tvUpcomingExerciseName?.text =
+            exerciseList!![currentExercisePosition + 1].getName()
+        if (restTimer != null) {
             restTimer?.cancel()
-            restProgress =0
+            restProgress = 0
         }
         setRestProgressBar()
     }
@@ -103,7 +112,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     /**
      * Function is used to set the progress of the timer using the progress for Exercise View.
      */
-    private fun setupExerciseView(){
+    private fun setupExerciseView() {
         binding?.flRestView?.visibility = View.INVISIBLE
         binding?.tvTitle?.visibility = View.INVISIBLE
         binding?.tvExerciseName?.visibility = View.VISIBLE
@@ -111,7 +120,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding?.ivImage?.visibility = View.VISIBLE
         binding?.tvUpcomingExerciseName?.visibility = View.INVISIBLE
         binding?.tvUpcomingLabel?.visibility = View.INVISIBLE
-        if(exerciseTimer !=null){
+        if (exerciseTimer != null) {
             exerciseTimer?.cancel()
             exerciseProgress = 0
         }
@@ -126,7 +135,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
      * Function is used to set the progress of timer using the progress
      */
     private fun setRestProgressBar() {
-        binding?.progressBar?.progress = restProgress // Sets the current progress to the specified value.
+        binding?.progressBar?.progress =
+            restProgress // Sets the current progress to the specified value.
         /**
          * @param millisInFuture The number of millis in the future from the call
          *   to {#start()} until the countdown is done and {#onFinish()}
@@ -135,11 +145,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
          *   {#onTick(long)} callbacks.
          */
         // Here we have started a timer of 10 seconds so the 10000 is milliseconds is 10 seconds and the countdown interval is 1 second so it 1000.
-        restTimer = object : CountDownTimer(10000, 1000) {
+        restTimer = object : CountDownTimer(restTimerDuration*1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++ // It is increased by 1
-                binding?.progressBar?.progress = 10 - restProgress // Indicates progress bar progress
-                binding?.tvTimer?.text=
+                binding?.progressBar?.progress =
+                    10 - restProgress // Indicates progress bar progress
+                binding?.tvTimer?.text =
                     (10 - restProgress).toString()// Current progress is set to text view in terms of seconds.
             }
 
@@ -159,7 +170,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun setExerciseProgressBar() {
         binding?.progressBarExercise?.progress = exerciseProgress
 
-        exerciseTimer = object : CountDownTimer(30000, 1000) {
+        exerciseTimer = object : CountDownTimer(exerciseTimerDuration*1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
                 binding?.progressBarExercise?.progress = 30 - exerciseProgress
@@ -169,20 +180,19 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             override fun onFinish() {
                 // TODO(Step 2 : We have changed the status of the selected item and updated the status of that, so that the position is set as completed in the exercise list.)
                 // START
-                exerciseList!![currentExercisePosition].setIsSelected(false) //  exercise is completed so selection is set to false
-                exerciseList!![currentExercisePosition].setIsCompleted(true)// updating in the list that this exercise is completed
-                exerciseAdapter!!.notifyDataSetChanged()
+
                 // END
                 // Updating the view after completing the 30 seconds exercise
                 // START
-                if(currentExercisePosition < exerciseList?.size!! -1 ){
+                if (currentExercisePosition < exerciseList?.size!! - 1) {
+                    exerciseList!![currentExercisePosition].setIsSelected(false) //  exercise is completed so selection is set to false
+                    exerciseList!![currentExercisePosition].setIsCompleted(true)// updating in the list that this exercise is completed
+                    exerciseAdapter!!.notifyDataSetChanged()
                     setupRestView()
                 } else {
-                    Toast.makeText(
-                        this@ExerciseActivity,
-                        "Congratulations ! You are completed the 7 minutes workout. ",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    finish()
+                    val intent = Intent(this@ExerciseActivity,FinishActivity::class.java)
+                    startActivity(intent)
                 }
                 //setRestProgressBar()
 
@@ -197,39 +207,40 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
      */
     override fun onDestroy() {
         super.onDestroy()
-        if(restTimer !=null){
+        if (restTimer != null) {
             restTimer?.cancel()
-            restProgress =0
+            restProgress = 0
         }
-        if(exerciseTimer !=null){
+        if (exerciseTimer != null) {
             exerciseTimer?.cancel()
-            exerciseProgress =0
+            exerciseProgress = 0
         }
         // Shutting down the Text to Speech feature when activity is destroyed
         // START
-        if(tts !=null){
+        if (tts != null) {
             tts!!.stop()
             tts!!.shutdown()
         }
-        if(player !=null){
+        if (player != null) {
             player!!.stop()
         }
         binding = null
     }
 
     override fun onInit(status: Int) {
-        if(status == TextToSpeech.SUCCESS){
+        if (status == TextToSpeech.SUCCESS) {
             //Set US English as language for tts
             var result = tts?.setLanguage(Locale.US)
-            if(result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
-                Log.e("TTS","The Language specified is not supported")
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The Language specified is not supported")
             }
-        }else {
-            Log.e("TTS","Initialization Failed")
+        } else {
+            Log.e("TTS", "Initialization Failed")
         }
     }
-    private fun speakOut(text:String){
-        tts!!.speak(text,TextToSpeech.QUEUE_FLUSH,null,"")
+
+    private fun speakOut(text: String) {
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
 }
