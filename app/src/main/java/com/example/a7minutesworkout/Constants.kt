@@ -12,11 +12,7 @@ object Constants {
          */
         val exerciseList = ArrayList<ExerciseModel>()
         val jumpingJacks = ExerciseModel(
-            1,
-            "Jumping Jack",
-            R.drawable.ic_jumping_jacks,
-            false,
-            false
+            1, "Jumping Jack", R.drawable.ic_jumping_jacks, false, false
         )
         exerciseList.add(jumpingJacks)
         val wallSit = ExerciseModel(2, "Wall Sit", R.drawable.ic_wall_sit, false, false)
@@ -31,11 +27,7 @@ object Constants {
 
         val stepUpOnChair =
             ExerciseModel(
-                5,
-                "Step-Up onto Chair",
-                R.drawable.ic_step_up_onto_chair,
-                false,
-                false
+                5, "Step-Up onto Chair", R.drawable.ic_step_up_onto_chair, false, false
             )
         exerciseList.add(stepUpOnChair)
 
