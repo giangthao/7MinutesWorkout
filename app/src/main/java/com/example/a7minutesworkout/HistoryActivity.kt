@@ -3,9 +3,13 @@ package com.example.a7minutesworkout
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import com.example.a7minutesworkout.databinding.ActivityBmiactivityBinding
 import com.example.a7minutesworkout.databinding.ActivityExerciseBinding
 import com.example.a7minutesworkout.databinding.ActivityHistoryBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class HistoryActivity : AppCompatActivity() {
     // create a binding for the layout
@@ -29,6 +33,25 @@ class HistoryActivity : AppCompatActivity() {
 
         binding?.toolbarHistoryActivity?.setNavigationOnClickListener {
             onBackPressed()
+        }
+        val dao = (application as WorkOutApp).db.historyDao()
+        getAllCompletedDates(dao)
+    }
+    // TODO(Step 2 : Created a function to get the list of completed dates from the History Table.)
+    // START
+    /**
+     * Function is used to get the list exercise completed dates.
+     */
+    private fun getAllCompletedDates(historyDao: HistoryDao){
+        lifecycleScope.launch {
+            historyDao.fetchAllEmployees().collect(){ allCompleteDatesList->
+                //List items are printed in log
+                for (i in allCompleteDatesList){
+                    Log.e("Date: ","" +i)
+                }
+
+
+            }
         }
     }
 

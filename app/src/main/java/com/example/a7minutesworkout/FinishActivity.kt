@@ -27,6 +27,7 @@ class FinishActivity : AppCompatActivity() {
         }
         //Todo 8: get the dao through the database in the application class
         val dao = (application as WorkOutApp).db.historyDao()
+        addDateToDatabase(dao)
     }
     private fun  addDateToDatabase(historyDao: HistoryDao){
         val c = Calendar.getInstance() // Calendars Current Instance

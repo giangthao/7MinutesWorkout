@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this,HistoryActivity::class.java)
             startActivity(intent)
         }
+        // Adding a click event to lauch the History Screen Activity from Main Activity
+        // Start
     }
 
     override fun onDestroy() {
