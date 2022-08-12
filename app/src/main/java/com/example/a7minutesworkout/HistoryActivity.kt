@@ -2,11 +2,10 @@ package com.example.a7minutesworkout
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.lifecycleScope
-import com.example.a7minutesworkout.databinding.ActivityBmiactivityBinding
-import com.example.a7minutesworkout.databinding.ActivityExerciseBinding
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a7minutesworkout.databinding.ActivityHistoryBinding
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -45,13 +44,29 @@ class HistoryActivity : AppCompatActivity() {
     private fun getAllCompletedDates(historyDao: HistoryDao){
         lifecycleScope.launch {
             historyDao.fetchAllEmployees().collect(){ allCompleteDatesList->
-                //List items are printed in log
-                for (i in allCompleteDatesList){
-                    Log.e("Date: ","" +i)
+                if(allCompleteDatesList.isNotEmpty()) {
+                    binding?.tvHistory?.visibility = View.VISIBLE
+                    binding?.rvHistory?.visibility = View.VISIBLE
+                    binding?.tvNoDataAvailable?.visibility = View.GONE
+
+            /*        val date = ArrayList<String>()
+                    //List items are printed in log
+                    for (i in allCompleteDatesList) {
+                        Log.e("Date: ", "" + i)
+                        date.add(i.date)
+                    }*/
+                    val historyAdapter = HistoryAdapter(allCompleteDatesList as ArrayList<HistoryEntity>)
+                    binding?.rvHistory?.layoutManager = LinearLayoutManager(this@HistoryActivity)
+                    binding?.rvHistory?.adapter = historyAdapter
+
+                } else {
+                    binding?.tvHistory?.visibility = View.GONE
+                    binding?.rvHistory?.visibility = View.GONE
+                    binding?.tvNoDataAvailable?.visibility = View.VISIBLE
+
                 }
 
-
-            }
+        }
         }
     }
 
